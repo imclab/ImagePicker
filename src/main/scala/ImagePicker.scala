@@ -7,9 +7,9 @@ case class Result(title: String, urls: List[String])
 object ImagePicker {
   private def getParentA(element: org.jsoup.nodes.Element): Option[org.jsoup.nodes.Element] = {
     element.parent() match {
-      case e:org.jsoup.nodes.Element if e.tagName() == "a" => return Some(e)
-      case e:org.jsoup.nodes.Element => return getParentA(e)
-      case null => return None
+      case e:org.jsoup.nodes.Element if e.tagName() == "a" => Some(e)
+      case e:org.jsoup.nodes.Element => getParentA(e)
+      case null => None
     }
   }
 
@@ -44,6 +44,8 @@ object ImagePicker {
         getURLFromImg(img) match {
           // Ignore icons
           case url if url.matches(""".*//parts\.blog\.livedoor\.jp/.*""") => ""
+          case url if url.matches(""".*//www\.assoc-amazon\.jp/.*""") => ""
+          case url if url.matches(""".*//resize\.blogsys\.jp/.*""") => ""
 
           case url => url
         }
@@ -56,6 +58,13 @@ object ImagePicker {
 
     var urls = mutable.MutableList[String]()
 
+    // ------------------------------------------------------------
+    // Remove noisy nodes
+
+    // livedoor Blog
+    doc.select("div.container div.article div.article-bottom") foreach (e => e.empty())
+
+    // ------------------------------------------------------------
     // FC2 BLOG
     urls ++= pickURLsFromElements(doc, "div.ently_body")
     urls ++= pickURLsFromElements(doc, "div.entry_body")
@@ -72,6 +81,7 @@ object ImagePicker {
     urls ++= pickURLsFromElements(doc, "div.article-main2")
     urls ++= pickURLsFromElements(doc, "div#main_col blockquote")
     urls ++= pickURLsFromElements(doc, "div#main_box3 div.contents")
+    urls ++= pickURLsFromElements(doc, "div.container div.article")
 
     Result(doc.select("title").text, urls.toList)
   }
