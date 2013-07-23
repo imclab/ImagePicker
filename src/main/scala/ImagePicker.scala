@@ -27,6 +27,8 @@ object ImagePicker {
           case href if href.matches(""".*//twitter\.com/.*""") => ""
           case href if href.matches(""".*//d\.href\.asia/.*""") => ""
           case href if href.matches(""".*//clap\.fc2\.com/.*""") => ""
+          case href if href.matches(""".*//www\.linkwithin\.com/.*""") => ""
+          case href if href.matches(""".*//opr\.formulas\.jp/.*""") => ""
 
           // Return img[src] if link is javascript
           case href if href.matches("""javascript:.*""") => img.attr("src")
