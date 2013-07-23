@@ -90,10 +90,12 @@ object ImagePicker {
 
   def main(args: Array[String]) = {
     if (args.size > 0) {
-      println("URL: " + args{0})
+      println("blogurl = '" + args{0} + "'")
       val result = pick(args{0})
-      println("Title: " + result.title)
+      println("caption = '" + result.title.replaceAll("'", """\'""") + "'")
+      println("urls = [")
       result.urls foreach (url => println("'" + url + "',"))
+      println("]")
     }
   }
 }
