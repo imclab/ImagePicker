@@ -1,6 +1,8 @@
 import org.jsoup.Jsoup
 import scala.collection.JavaConversions._
 import scala.collection._
+import spray.json._
+import DefaultJsonProtocol._
 
 case class Result(title: String, urls: List[String])
 
@@ -89,13 +91,11 @@ object ImagePicker {
   }
 
   def main(args: Array[String]) = {
-    if (args.size > 0) {
-      println("blogurl = '" + args{0} + "'")
-      val result = pick(args{0})
-      println("caption = '" + result.title.replaceAll("'", """\'""") + "'")
-      println("urls = [")
-      result.urls foreach (url => println("'" + url + "',"))
-      println("]")
-    }
+    val json = (args map (url => {
+      val result = pick(url)
+      (url, result.title, result.urls)
+    })).toJson
+
+    println(json)
   }
 }
