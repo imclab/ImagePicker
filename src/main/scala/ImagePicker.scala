@@ -4,7 +4,11 @@ import scala.collection._
 import spray.json._
 import DefaultJsonProtocol._
 
-case class Result(title: String, urls: List[String])
+case class Result(title: String, urls: List[String]) {
+  def printUrls = {
+    urls foreach (u => println(u))
+  }
+}
 
 object ImagePicker {
   private def getParentA(element: org.jsoup.nodes.Element): Option[org.jsoup.nodes.Element] = {
@@ -31,6 +35,9 @@ object ImagePicker {
           case href if href.matches(""".*//clap\.fc2\.com/.*""") => ""
           case href if href.matches(""".*//www\.linkwithin\.com/.*""") => ""
           case href if href.matches(""".*//opr\.formulas\.jp/.*""") => ""
+          case href if href.matches(""".*//www\.facebook\.com/.*""") => ""
+          case href if href.matches(""".*//plus\.google\.com/.*""") => ""
+          case href if href.matches(""".*//getpocket\.com/.*""") => ""
 
           // Return img[src] if link is javascript
           case href if href.matches("""javascript:.*""") => img.attr("src")
@@ -77,6 +84,7 @@ object ImagePicker {
 
     // livedoor Blog
     urls ++= pickURLsFromElements(doc, "div.article-body")
+    urls ++= pickURLsFromElements(doc, "div.articleBody")
     urls ++= pickURLsFromElements(doc, "div.article-body-more")
     urls ++= pickURLsFromElements(doc, "div.blogbody")
     urls ++= pickURLsFromElements(doc, "div.entry-body")
