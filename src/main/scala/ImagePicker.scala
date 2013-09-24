@@ -38,6 +38,7 @@ object ImagePicker {
           case href if href.matches(""".*//www\.facebook\.com/.*""") => ""
           case href if href.matches(""".*//plus\.google\.com/.*""") => ""
           case href if href.matches(""".*//getpocket\.com/.*""") => ""
+          case href if href.matches(""".*//get2ch\.net/.*""") => ""
 
           // Return img[src] if link is javascript
           case href if href.matches("""javascript:.*""") => img.attr("src")
@@ -94,6 +95,7 @@ object ImagePicker {
     urls ++= pickURLsFromElements(doc, "div#main_col blockquote")
     urls ++= pickURLsFromElements(doc, "div#main_box3 div.contents")
     urls ++= pickURLsFromElements(doc, "div.container div.article")
+    urls ++= pickURLsFromElements(doc, "div.artictentry")
 
     Result(doc.select("title").text, urls.toList)
   }
